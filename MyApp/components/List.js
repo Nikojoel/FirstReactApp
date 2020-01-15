@@ -13,7 +13,7 @@ const List = () => {
     console.log(data);
     setMedia(data);
   }, [loading]);
-  
+
   return (
     <FlatList
       data={media}
