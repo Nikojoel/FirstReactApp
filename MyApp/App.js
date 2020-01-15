@@ -5,7 +5,7 @@ import { MediaProvider } from "./contexts/MediaContext";
 
 const App = () => {
   return (
-    <View>
+    <View style={{marginTop: 40}}>
       <MediaProvider>
         <List/>
       </MediaProvider>
