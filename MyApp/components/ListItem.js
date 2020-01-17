@@ -5,25 +5,51 @@ import PropTypes from "prop-types";
 const ListItem = (props) => {
   return (
     <TouchableOpacity style={styles.background}>
-      <Image
-        style={{ width: null, height: 160, flex: 1 }}
+      <Image style={styles.image}
         source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + props.singleMedia.thumbnails.w160}}
       />
-      <View style={{ flex: 1, marginLeft: 5}}>
-        <Text style={{fontSize: 40, fontWeight: "bold"}}>{props.singleMedia.title}</Text>
-        <Text style={{fontSize: 20}}>{props.singleMedia.description}</Text>
+      <View style={styles.view}>
+        <Text style={styles.desc}>{props.singleMedia.title}</Text>
+        <Text style={styles.txt}>{props.singleMedia.description}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   background: {
-    backgroundColor: '#8b8b8b',
+    backgroundColor: '#e0e0e0',
     marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5,
     flexDirection: 'row',
-    paddingTop: 10,
+    paddingTop: 30,
+    paddingBottom: 30,
+    borderWidth: 2,
   },
+  image: {
+    width: 200,
+    height: 200,
+    flex: 1,
+    borderRadius: 100,
+    overflow: "hidden",
+  },
+  view: {
+    flex: 1,
+    marginLeft: 5,
+  },
+  desc: {
+    color: "#cd853a",
+    fontSize: 35,
+    fontWeight: "bold",
+  },
+
+  txt: {
+    fontSize: 20,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+
 });
 
 ListItem.propTypes = {

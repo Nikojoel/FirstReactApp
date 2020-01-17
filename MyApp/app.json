@@ -1,5 +1,8 @@
 {
   "expo": {
+    "androidStatusBar": {
+      "backgroundColor": "#5ac05b"
+    },
     "name": "MyApp",
     "slug": "MyApp",
     "privacy": "public",
