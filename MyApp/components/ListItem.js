@@ -4,7 +4,13 @@ import PropTypes from "prop-types";
 
 const ListItem = (props) => {
   return (
-    <TouchableOpacity style={styles.background}>
+    <TouchableOpacity style={styles.background} onPress={() => {
+      props.navigation.push("Single", {
+        fileName: props.singleMedia.thumbnails.w160,
+        title: props.singleMedia.title,
+        text: props.singleMedia.description,
+      });
+    }}>
       <Image style={styles.image}
         source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + props.singleMedia.thumbnails.w160}}
       />
@@ -25,7 +31,15 @@ const styles = StyleSheet.create ({
     flexDirection: 'row',
     paddingTop: 30,
     paddingBottom: 30,
-    borderWidth: 2,
+    borderWidth: 1,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 0.3,
+    elevation: 10,
   },
   image: {
     width: 200,
