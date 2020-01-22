@@ -27,4 +27,34 @@ const getAllMedia = () => {
   return [data, loading];
 };
 
-export { getAllMedia };
+const login = async (data) => {
+  const response = await fetch(apiUrl + "login/", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: data.username,
+      password: data.password,
+    })
+  });
+  return response.json();
+};
+
+const register = async (data) => {
+  const response = await fetch(apiUrl + "users/", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: data.username,
+      password: data.password,
+      email: data.email,
+      full_name: data.fullname,
+    })
+  });
+  return response.json();
+};
+
+export { getAllMedia, login, register };

@@ -10,7 +10,6 @@ const List = (props) => {
   const [data, loading] = getAllMedia();
 
   useEffect(() => {
-    console.log(data);
     setMedia(data);
   }, [loading]);
 

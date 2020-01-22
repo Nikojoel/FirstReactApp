@@ -1,10 +1,32 @@
-import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, {useEffect, useState } from 'react';
+import {StyleSheet, View, Text, Button, AsyncStorage} from 'react-native';
 
-const Profile = () => {
+
+const getUser = () => {
+  const [info, setUser] = useState([]);
+  const user = async () => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    setUser(JSON.parse(userInfo));
+  };
+  useEffect(() => {
+    user();
+  }, []);
+  return info;
+};
+
+const Profile = (props) => {
+  const signOutAsync = async () => {
+    await AsyncStorage.clear();
+    props.navigation.navigate('Auth');
+  };
+  const user = getUser();
+  console.log(user);
   return (
     <View style={styles.container}>
-      <Text>Profile</Text>
+      <Text>{user.username}'s profile</Text>
+      <Text>{user.email}</Text>
+      <Text>{user.full_name}</Text>
+      <Button title="Logout!" onPress={signOutAsync} />
     </View>
   );
 };
