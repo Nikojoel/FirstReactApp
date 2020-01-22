@@ -1,94 +1,328 @@
+# Login, Register
 
+## 2/2019
 
-# AJAX + state
+## Authentication
 
-## 1/2019
+* Study:
+  * [AsyncStorage](https://docs.expo.io/versions/latest/react-native/asyncstorage/#__next)
+  * [React Navigation authentication flows](https://reactnavigation.org/docs/en/auth-flow.html)
 
----
+### A. hard coded login
 
-Study [Context](https://reactjs.org/docs/context.html), [State Hook](https://reactjs.org/docs/hooks-state.html), [Effect Hook](https://reactjs.org/docs/hooks-effect.html) and [this article](https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react)
-* We'll use the coding method in the article as an example to do the following tasks 
+1. Continue last exercise. Create a new branch with git.
+1. Create 'AuthLoading.js', 'Login.js' to 'views/'
+1. _Login.js_
+    * Eventually this will be the login and register page
+    * For now we'll do hard coded login:
 
-## Fetching data with AJAX and sharing it with Context, Task A
+    ```jsx harmony
+    import React from 'react';
+    import {
+      StyleSheet,
+      View,
+      Text,
+      Button,
+      AsyncStorage,
+    } from 'react-native';
 
-1. Continue last exercise. Create a new branch `http-a` with git and checkout it (`git checkout -b http-a`).
-    1. Create 'contexts' folder to project root folder
-    2. Add MediaContext.js file to contexts:
+   const Login = (props) => { // props is needed for navigation
+     const signInAsync = async () => {
+         await AsyncStorage.setItem('userToken', 'abc');
+         props.navigation.navigate('App');
+       };
+      return (
+        <View style={styles.container}>
+          <Text>Login</Text>
+          <Button title="Sign in!" onPress={
+            () => {
+              signInAsync(); 
+            }
+          } />
+        </View>
+      );
+    };
 
-        ```js
-        import React, {useState} from 'react';
-        import PropTypes from 'prop-types';
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 40,
+      },
+    });
 
-        const MediaContext = React.createContext([{}, () => {}]);
+   // proptypes here
 
-        const mediaArray = [];
-
-        const MediaProvider = (props) => {
-          const [media, setMedia] = useState(mediaArray);
-          return (
-            <MediaContext.Provider value={[media, setMedia]}>
-              {props.children}
-            </MediaContext.Provider>
-          );
-        };
-
-        MediaProvider.propTypes = {
-          children: PropTypes.node,
-        };
-
-        export {MediaContext, MediaProvider};
-        ```
-
-    3. Move mediaArray from App.js to MediaContext's state
-    4. Add _MediaProvider_ to App.js JSX
-    5. Modify List.js to use the data from MediaContext instead of prop
-
-        ```js
-        ...
-        const [media, setMedia] = useContext(MediaContext);
-        ...
-        ...
-        <FlatList
-          data={media}
-        ...
-        ```
-
-    6. Test that the app still works.
-1. Use [test.json](./assets/test.json) url = https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json instead of the hard coded mediaArray
-   * use [fetch](https://javascript.info/async-await#await) or axios to load test.json,
-     * fetch is used in the course material
-     * prevent fetch from looping by using effect-hook.
-     * Use 'hooks.js' from [this article](https://medium.com/@cwlsn/how-to-fetch-data-with-react-hooks-in-a-minute-e0f9a15a44d6) as an example
-        * create 'hooks' folder to project root and save 'hooks.js' as 'APIHooks.js' there
-        * convert functions to arrow functions.
-        * In _List.js_ First log the loaded data using `console.log()`
-           * [Debugging JavaScript](https://docs.expo.io/versions/v34.0.0/workflow/debugging/#debugging-javascript)
-           * Use _Photos.js_ in the article as example.
-        * Save the data to MediaContext's state using `setMedia`. 
-        * Use [keyExtractor](https://www.techiediaries.com/react-native-tutorial/flatlist-with-renderitem-and-keyextractor/) in _List.js_ to fix the warning about missing keys
-1. git add, commit & push to remote repository
-
----
-
-## Fetching data with AJAX, Task B
-
-1. Continue last exercise. Create a new git branch `http-b` and use it.
-1. Modify the app so that you fetch the data from the media API instead of test.json
-    - [Documentation](http://media.mw.metropolia.fi/wbma/docs/)
-    - base url: http://media.mw.metropolia.fi/wbma/
-    - Media files location: http://media.mw.metropolia.fi/wbma/uploads/
-1. In _APIHooks.js_ 
-   * add this after imports: `const apiUrl = 'http://media.mw.metropolia.fi/wbma/';`
-   * rename useFetch function to 'getAllMedia' and remove url parameter from parens.
-   * change `const response = await fetch(url);` to `const response = await fetch(apiUrl + 'media');`
-1. First log the loaded data using ```console.log()```
-   * Note that '/media' endpoint doesn't give you thumbnails. You need to do a nested request to '/media/:id' to get also the thumbnails.
-   * To combine multiple fetch results use [Promise.all](https://www.freecodecamp.org/news/promise-all-in-javascript-with-example-6c8c5aea3e32/):
-   ```javascript
-   const result = await Promise.all(array.map(async (item) => {
-      const response = await fetch(url);
-      return await response.json();
-    }));
+    export default Login;
    ```
-1. In _List.js_ use _getAllMedia_ instead of useFetch
-1. git add, commit & push to remote repository
+
+1. _AuthLoading.js_:
+
+   ```jsx harmony
+   import React, {useEffect} from 'react';
+   import {
+     ActivityIndicator,
+     AsyncStorage,
+     StatusBar,
+     View,
+     Text,
+   } from 'react-native';
+
+   const bootstrapAsync = async (props) => {
+     const getToken = async () => {
+       const userToken = await AsyncStorage.getItem('userToken');
+
+       // This will switch to the App screen or Auth screen and this loading
+       // screen will be unmounted and thrown away.
+       console.log('token', userToken);
+       props.navigation.navigate(userToken ? 'App' : 'Auth');
+     }
+     useEffect(() => {
+       getToken();
+     }, []);
+   };
+
+   const AuthLoading = (props) => {
+     bootstrapAsync(props);
+     return (
+       <View>
+         <ActivityIndicator />
+         <StatusBar barStyle="default" />
+       </View>
+     );
+   };
+
+   export default AuthLoading;
+   ```
+
+1. Modify _Navigator.js_ to add switch navigator like in [Authentication flows](https://reactnavigation.org/docs/en/auth-flow.html):
+
+    ```jsx harmony
+   ...
+   import AuthLoading from '../views/AuthLoading';
+   import Login from '../views/Login';
+   ...
+   const StackNavigator = createStackNavigator(
+        {
+          Home: {
+            screen: TabNavigator,
+            navigationOptions: {
+              headerMode: 'none', // this will hide the header
+            },
+          },
+          Single: {
+            screen: Single,
+          },
+          Logout: {
+            screen: Login,
+          },
+        },
+    );
+  
+    const Navigator = createSwitchNavigator(
+        {
+          AuthLoading: AuthLoading,
+          App: StackNavigator,
+          Auth: Login,
+        },
+        {
+          initialRouteName: 'AuthLoading',
+        }
+    );
+    ...
+   ```
+  
+1. Logout functionality to _Profile.js_:
+
+   ```jsx harmony
+   ...
+
+   const Profile = (props) => {
+     const signOutAsync = async () => {
+          await AsyncStorage.clear();
+          props.navigation.navigate('Auth');
+        };
+     return (
+       <View style={styles.container}>
+         <Text>Profile</Text>
+         <Button title="Logout!" onPress={signOutAsync} />
+       </View>
+     );
+   };
+   ...
+   ```
+
+1. At this point the app should have basic login/logout functionality.
+
+### B. Fetch token from Media API
+
+1. Recap how to make [POST request with fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Supplying_request_options)
+1. [Login endpoint in the Media API](http://media.mw.metropolia.fi/wbma/docs/#api-Authentication-PostAuth)
+1. Modify _Login.js_
+
+   ```jsx harmony
+   ...
+   const signInAsync = async (props) => {
+     // do async fetch here like in List and ListItem
+     // hard code your username and password
+     // you need to use POST method, see API documentation for details
+     await AsyncStorage.setItem('userToken', tokenFromApi);
+     props.navigation.navigate('App');
+   };
+   ...
+   ```
+
+### C. Login form
+
+1. Add 'FormTextInput.js' to 'components' folder:
+
+   ```jsx harmony
+   import React from 'react';
+   import {StyleSheet, TextInput} from 'react-native';
+   import PropTypes from 'prop-types';
+
+
+   const FormTextInput = (props) => {
+     const {style, ...otherProps} = props;
+     return (
+       <TextInput
+         style={[styles.textInput, style]}
+         {...otherProps}
+       />
+     );
+   };
+
+   const styles = StyleSheet.create({
+     textInput: {
+       height: 40,
+       borderColor: '#ccc',
+       borderWidth: 1,
+     },
+   });
+
+   FormTextInput.propTypes = {
+     style: PropTypes.object,
+   };
+
+   export default FormTextInput;
+   ```
+
+1. Add two FormTextInputs to _Login.js_:
+
+   ```jsx harmony
+   ...
+   return (
+        <View style={styles.container}>
+          <Text>Login</Text>
+          <View style={styles.form}>
+            <FormTextInput
+              autoCapitalize='none'
+              placeholder='username'
+            />
+            <FormTextInput
+              autoCapitalize='none'
+              placeholder='password'
+              secureTextEntry={true}
+            />
+            <Button title="Sign in!" onPress={signInAsync} />
+          </View>
+        </View>
+      );
+   ...
+   ```
+
+1. Now we need to send the values from FormTextInputs to the API
+   * study [this article about forms and hooks](https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57)
+      * especially 'Creating Custom Hooks' and 'Connecting the Hook to the Form
+      * note that article is React (HTML) but we are coding React Native, for example the [events](https://facebook.github.io/react-native/docs/textinput#onchangetext) are different.
+1. To get text from the form to local state, create 'LoginHooks.js' to 'hooks' folder
+   * _LoginHooks.js_:
+
+   ```jsx harmony
+   import {useState} from 'react';
+
+   const useSignUpForm = () => {
+     const [inputs, setInputs] = useState({});
+     const handleUsernameChange = (text) => {
+       setInputs((inputs) =>
+         ({
+           ...inputs,
+           username: text,
+         }));
+     };
+     const handlePasswordChange = (text) => {
+       setInputs((inputs) =>
+         ({
+           ...inputs,
+           password: text,
+         }));
+     };
+     return {
+       handleUsernameChange,
+       handlePasswordChange,
+       inputs,
+     };
+   };
+
+   export default useSignUpForm;
+   ```
+
+1. Modify _Login.js_
+   * Add value and onChangeText attributes to FormTextInputs like in the linked article above
+   * Modify 'signInAsync' function to get username and password from 'inputs' object
+
+1. Display user's info (username, fullname and email) in _Profile.js_
+   * You can store also the user data to AsyncStorage
+   * Remember that AsyncStorage is asynchronous, so you need useState-hook to display anything stored to AsyncStorage and useEffect-hook to prevent infinite loop.
+
+### D. Registering
+
+1. Add another "form" to _Login.js_ for registering.
+   * registering is basically the same as login. The difference is the [endpoint](http://media.mw.metropolia.fi/wbma/docs/#api-User-PostUser) in the media API
+1. Do the registering functionality the same way as login functionality
+1. Make login to happen automatically after registering
+   * in other words run 'signInAsync' after registering is done
+
+### Extra. Move Media API calls to one file
+
+1. Modify 'ApiHooks.js' in 'hooks' folder
+1. move all functions that do fetches to Media Api to 'ApiHooks.js'
+1. Use 'LoginHooks.js' as reference
+   * example:
+
+   ```jsx harmony
+    import {useState, useEffect} from 'react';
+
+    const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
+
+    const getAllMedia = () => {
+      const [data, setData] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const fetchUrl = async () => {
+        try {
+          const response = await fetch(apiUrl + 'media/all');
+          const json = await response.json();
+          const result = await Promise.all(json.files.map(async (item) => {
+            const tnResponse = await fetch(apiUrl + 'media/' + item.file_id);
+            return await tnResponse.json();
+          }));
+          console.log('apihooks', result);
+          setData(result);
+          setLoading(false);
+        } catch (e) {
+          console.log('error', e.message);
+        }
+      };
+      useEffect(() => {
+        fetchUrl();
+      }, []);
+      return [data, loading];
+    };
+    export {getAllMedia};
+
+    export default mediaAPI;
+   ```
+
+---
