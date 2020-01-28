@@ -122,11 +122,11 @@ export default App;
 ```
 1. Try to make the app look like these images:
 
-![Login screen](images/login.png)
+![Login screen](https://github.com/mattpe/wbma/blob/master/docs/images/login.png)
 
-![Home screen](images/home.png)
+![Home screen](https://github.com/mattpe/wbma/blob/master/docs/images/home.png)
 
-![Single screen](images/single.png)
+![Single screen](https://github.com/mattpe/wbma/blob/master/docs/images/single.png)
 
 
 ### Task B: Develop profile page
@@ -138,5 +138,5 @@ export default App;
    - You'll need to use existing or add more methods to 'ApiHooks.js' to achieve this
    - Hint: Userdata is already in AsyncStorage
 
-![Profile screen](images/profile.png)
+![Profile screen](https://github.com/mattpe/wbma/blob/master/docs/images/profile.png)
   
