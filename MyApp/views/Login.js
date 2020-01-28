@@ -2,7 +2,7 @@ import React from 'react';
 import {AsyncStorage} from 'react-native';
 import FormTextInput from "../components/FormTextInput";
 import useSignUpForm from "../hooks/LoginHooks";
-import {login, register} from "../hooks/APIHooks";
+import {getProfPic, login, register} from "../hooks/APIHooks";
 import {Text, Button, Form, Body, Item} from "native-base";
 
 const Login = (props) => { // props is needed for navigation
@@ -16,6 +16,8 @@ const Login = (props) => { // props is needed for navigation
 
   const signInAsync = async () => {
     const result = await login(inputs);
+    const user = await getProfPic(result.user.user_id);
+    result.user.profPic = user[0].filename;
     await AsyncStorage.setItem('userToken', result.token);
     await AsyncStorage.setItem('userInfo', JSON.stringify(result.user));
     props.navigation.navigate('App');

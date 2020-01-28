@@ -20,8 +20,9 @@ const Single = (props) => {
 
 const styles = StyleSheet.create({
   image: {
-    width: Dimensions.get("window").width * 1,
-    height: Dimensions.get("window").width * 1,
+    width: Dimensions.get("window").width * 0.85,
+    height: Dimensions.get("window").width * 0.85,
+    marginTop: 30,
   },
   desc: {
     fontSize: 25,

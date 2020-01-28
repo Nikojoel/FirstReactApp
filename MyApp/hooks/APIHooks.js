@@ -57,4 +57,9 @@ const register = async (data) => {
   return response.json();
 };
 
-export { getAllMedia, login, register };
+const getProfPic = async (user) => {
+  const response = await fetch (apiUrl + "tags/avatar_" + user);
+  return response.json();
+};
+
+export { getAllMedia, login, register, getProfPic };
