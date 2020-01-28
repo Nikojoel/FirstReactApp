@@ -1,69 +1,44 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {Image, StyleSheet, Dimensions} from "react-native";
+import {Button, ListItem as Item, Left, Body, Right, Text} from "native-base";
 import React from "react";
 import PropTypes from "prop-types";
 
 const ListItem = (props) => {
   return (
-    <TouchableOpacity style={styles.background} onPress={() => {
-      props.navigation.push("Single", {
-        fileName: props.singleMedia.thumbnails.w160,
-        title: props.singleMedia.title,
-        text: props.singleMedia.description,
-      });
-    }}>
-      <Image style={styles.image}
-        source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + props.singleMedia.thumbnails.w160}}
-      />
-      <View style={styles.view}>
-        <Text style={styles.desc}>{props.singleMedia.title}</Text>
-        <Text style={styles.txt}>{props.singleMedia.description}</Text>
-      </View>
-    </TouchableOpacity>
+    <Item>
+      <Left>
+        <Image style={styles.image}
+               source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + props.singleMedia.thumbnails.w160}}
+        />
+        <Body>
+          <Text style={styles.desc}>{props.singleMedia.title}</Text>
+          <Text numberOfLines={1}>{props.singleMedia.description}</Text>
+        </Body>
+      </Left>
+      <Right>
+        <Button primary rounded onPress={() => {
+          props.navigation.push("Single", {
+            fileName: props.singleMedia.thumbnails.w160,
+            title: props.singleMedia.title,
+            text: props.singleMedia.description,
+          });
+        }}>
+          <Text>View</Text>
+        </Button>
+      </Right>
+    </Item>
   );
 };
 
-const styles = StyleSheet.create ({
-  background: {
-    backgroundColor: '#e0e0e0',
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-    flexDirection: 'row',
-    paddingTop: 30,
-    paddingBottom: 30,
-    borderWidth: 1,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 0.3,
-    elevation: 10,
-  },
+const styles = StyleSheet.create({
   image: {
-    width: 200,
-    height: 200,
-    flex: 1,
-    borderRadius: 100,
-    overflow: "hidden",
-  },
-  view: {
-    flex: 1,
-    marginLeft: 5,
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
+    margin: 5,
   },
   desc: {
-    color: "#cd853a",
-    fontSize: 35,
-    fontWeight: "bold",
+    fontSize: 25,
   },
-
-  txt: {
-    fontSize: 20,
-    marginTop: 5,
-    marginLeft: 5,
-  },
-
 });
 
 ListItem.propTypes = {

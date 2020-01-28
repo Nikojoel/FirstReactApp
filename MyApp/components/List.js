@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import { FlatList } from "react-native";
 import ListItem from "./ListItem";
 import PropTypes from "prop-types";
 import { MediaContext } from "../contexts/MediaContext";
 import { getAllMedia } from "../hooks/APIHooks";
+import { List as BaseList } from "native-base";
 
 const List = (props) => {
   const [media, setMedia] = useContext(MediaContext);
@@ -14,10 +14,15 @@ const List = (props) => {
   }, [loading]);
 
   return (
-    <FlatList
-      data={media}
+    <BaseList
+      dataArray={media}
+      renderRow={
+        (item) => <ListItem
+          navigation={props.navigation}
+          singleMedia={item}
+        />
+      }
       keyExtractor={(item, index) => index.toString()}
-      renderItem={({item}) => <ListItem navigation={props.navigation} singleMedia={item} />}
     />
   );
 };

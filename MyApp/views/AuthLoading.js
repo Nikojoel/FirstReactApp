@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import { ActivityIndicator, AsyncStorage, StatusBar, View, Text, } from 'react-native';
+import { ActivityIndicator, AsyncStorage, StatusBar, } from 'react-native';
+import { Container } from "native-base";
 
 const bootstrapAsync = async (props) => {
   const getToken = async () => {
@@ -18,10 +19,10 @@ const bootstrapAsync = async (props) => {
 const AuthLoading = (props) => {
   bootstrapAsync(props);
   return (
-    <View>
+    <Container>
       <ActivityIndicator />
       <StatusBar barStyle="default" />
-    </View>
+    </Container>
   );
 };
 

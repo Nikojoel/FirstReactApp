@@ -8,34 +8,34 @@ import Profile from "../views/Profile";
 import Single from "../views/Single";
 import Login from "../views/Login";
 import AuthLoading from "../views/AuthLoading";
+import {Icon} from "native-base";
 
-const TabNavigator = createBottomTabNavigator (
-  // RouteConfigs
+const TabNavigator = createBottomTabNavigator(
   {
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        title: 'Home',
-      },
-    },
-    Profile: {
-      screen: Profile,
-      navigationOptions: {
-        title: 'Profile',
-      },
-    },
+    Home,
+    Profile,
   },
   {
-    initialRouteName: 'Home',
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarIcon: () => {
+        const {routeName} = navigation.state;
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = 'home';
+        } else if (routeName === 'Profile') {
+          iconName = 'person';
+        }
+
+        // You can return any component that you like here!
+        return <Icon style={{color: "#3F51B5"}}
+          name={iconName}
+          size={25}
+        />;
+      },
+    }),
     tabBarOptions: {
-      activeBackgroundColor: "#df933d",
-      activeTintColor: "#000000",
-      labelStyle: {
-        paddingBottom: 10,
-        fontSize: 20,
-        fontWeight: "bold",
-      }
-    }
+      showLabel: false
+    },
   }
 );
 
@@ -45,7 +45,7 @@ const StackNavigator = createStackNavigator (
     Home: {
       screen: TabNavigator,
       navigationOptions: {
-        headerShown: false // this will hide the header
+        headerShown: false, // this will hide the header
       },
     },
     Single: {

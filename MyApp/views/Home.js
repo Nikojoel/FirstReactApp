@@ -1,17 +1,18 @@
 import React from 'react';
-import {View, Image, StyleSheet, Dimensions, Text, } from 'react-native';
+import {Image, StyleSheet, Dimensions,} from 'react-native';
 import List from "../components/List";
+import {Text, Container} from "native-base";
 
 const Home = (props) => {
   const {navigation} = props;
   return (
-    <View>
+    <Container>
       <Image
         style={main.picture}
         source={require("../public/img/dog.jpg")}/>
-      <Text style={main.picText}>Pomeraniann</Text>
+      <Text style={main.picText}>Pomeranian</Text>
       <List navigation={navigation}/>
-    </View>
+    </Container>
   );
 };
 

@@ -1,7 +1,7 @@
 {
   "expo": {
     "androidStatusBar": {
-      "backgroundColor": "#5ac05b"
+      "backgroundColor": "#3F51B5"
     },
     "name": "MyApp",
     "slug": "MyApp",

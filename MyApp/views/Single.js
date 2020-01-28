@@ -1,41 +1,35 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, } from 'react-native';
+import {StyleSheet, Image, Dimensions,} from 'react-native';
+import {Item, Text, Body} from "native-base";
 
 const Single = (props) => {
   const { navigation } = props;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>{(navigation.getParam("title", "no title"))}</Text>
-      <Text style={styles.postText}>{navigation.getParam("text", "no text")}</Text>
+    <Item style={{borderColor: "transparent"}}>
+      <Body>
       <Image style={styles.image}
         source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName", "no picture")}}
       />
-    </View>
+        <Text style={styles.desc}>{navigation.getParam("title", "no title")}</Text>
+        <Text style={styles.text}>{navigation.getParam("text", "no text")}</Text>
+      </Body>
+    </Item>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#e0e0e0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   image: {
-    flex: 1,
-    width: "100%",
-    height: null,
-    resizeMode: "contain",
+    width: Dimensions.get("window").width * 1,
+    height: Dimensions.get("window").width * 1,
   },
-  titleText: {
-    paddingTop: 40,
-    fontSize: 40,
-    color: "#cd853a",
-    fontWeight: "bold",
+  desc: {
+    fontSize: 25,
+    margin: 5,
   },
-  postText: {
-    paddingTop: 20,
+  text: {
+    marginLeft: 15,
+    marginRight: 15,
   }
 });
 
