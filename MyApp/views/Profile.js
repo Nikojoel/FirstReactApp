@@ -23,36 +23,36 @@ const Profile = (props) => {
   const user = getUser();
   console.log(user);
   return (
-  <Container>
-    <Content>
-      <Card>
-        <CardItem bordered>
-          <Icon name="person"/>
-          <Text>Username: {user.username}</Text>
-        </CardItem>
-          <Body>
-            <CardItem>
-              <Image style={styles.image}
-                            source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + user.profPic}}
-              />
+    <Container>
+      <Content>
+        <Card>
+          <CardItem bordered>
+            <Icon name="person"/>
+            <Text>Username: {user.username}</Text>
+          </CardItem>
+            <Body>
+              <CardItem>
+                <Image style={styles.image}
+                              source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + user.profPic}}
+                />
+              </CardItem>
+            </Body>
+            <CardItem bordered>
+              <Text>Fullname: {user.full_name}</Text>
             </CardItem>
-          </Body>
-          <CardItem bordered>
-            <Text>Fullname: {user.full_name}</Text>
-          </CardItem>
-          <CardItem bordered>
-            <Text>Email: {user.email}</Text>
-          </CardItem>
-          <CardItem>
-            <Button style={{flex: 1,}} primary onPress={signOutAsync}>
-              <Body>
-                <Text style={{color: "white"}}>Logout</Text>
-              </Body>
-            </Button>
-          </CardItem>
-      </Card>
-    </Content>
-  </Container>
+            <CardItem bordered>
+              <Text>Email: {user.email}</Text>
+            </CardItem>
+            <CardItem>
+              <Button style={{flex: 1,}} primary onPress={signOutAsync}>
+                <Body>
+                  <Text style={{color: "white"}}>Logout</Text>
+                </Body>
+              </Button>
+            </CardItem>
+        </Card>
+      </Content>
+    </Container>
   );
 };
 const styles = StyleSheet.create({
