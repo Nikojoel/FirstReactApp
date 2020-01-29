@@ -1,142 +1,54 @@
-# NativeBase
+# WBMA, Forms
 
-## 3/2020
+## 3/2019
 
 ---
-  **Note!**
 
-  When using NativeBase you should import the [`<Image>` component](https://facebook.github.io/react-native/docs/images.html#network-images) still from `react-native` library to avoid issues with network sourced images.
+## Forms
 
+### Task 1: Smarter Login/Registration page
 
-### Task A: Convert the app we've made so far to use NativeBase
-
-1. Continue last exercise. Create a new branch with git.  
-1. Study [this article](https://blog.bitsrc.io/11-react-native-component-libraries-you-should-know-in-2018-71d2a8e33312) and [NativeBase](https://nativebase.io/)
-1. Convert the app we've made so far to use NativeBase
-1. Install NativeBase
-    - `npm install native-base --save`
-    - `expo install expo-font`
-1. Remove all styling from the files where you use NativeBase components:
-
-   ```jsx harmony
-   // remove this part:
-   const styles = StyleSheet.create(...
-   ```
-
-    - You can customise NativeBase components later
-1. [NativeBase components](https://docs.nativebase.io/Components.html#Components)
-   - By default you can use [Ionicons](https://ionicons.com/) as value for name attribute of [Icon](https://docs.nativebase.io/Components.html#icon-def-headref)
-1. In our app there are already List and ListItem components so if you want to use the [List](https://docs.nativebase.io/Components.html#list-def-headref) component of NativeBase you need to use `import as` syntax:
+1. Study [Conditional rendering](https://reactjs.org/docs/conditional-rendering.html)
+    * especially [Inline If with Logical && Operator](https://reactjs.org/docs/conditional-rendering.html#inline-if-with-logical--operator)
+1. Continue the previous exercise. Create a new git branch for these tasks.
+1. Show only login form when opening the Login page
+   * remember that changing the view requires change in state (useState)
+1. Add a link/button for switching between login/register forms ("No account yet?" or something).
+1. When registering check that the username is free just after the username input field gets filled
+   * there is an [endpoint](http://media.mw.metropolia.fi/wbma/docs/#api-User-CheckUserName) for that
+   * use e.g. [onChangeText](https://facebook.github.io/react-native/docs/textinput.html#onchangetext)  or [onEndEditing](https://facebook.github.io/react-native/docs/textinput.html#onendediting) events
 
    ```jsx harmony
-   ...
-   import {List as BaseList} from 'native-base';
-   ...
-   return (
-         <BaseList
-           dataArray={media}
-           renderRow={
-             (item) => <ListItem
-               navigation={props.navigation}
-               singleMedia={item}
-             />
-           }
-           keyExtractor={(item, index) => index.toString()}
-         />
-     );
-   ```
-
-1. Adding icons to bottom tabs
-
-   ```jsx harmony
-   // Navigator.js
-   /* eslint-disable react/display-name */
-   import React from 'react';
-   ...
-   const TabNavigator = createBottomTabNavigator(
+   <TextInput
+   onEndEditing={(evt) =>
         {
-          Home,
-          Profile,
-        },
-        {
-          defaultNavigationOptions: ({navigation}) => ({
-            tabBarIcon: () => {
-              const {routeName} = navigation.state;
-              let iconName;
-              if (routeName === 'Home') {
-                iconName = 'home';
-              } else if (routeName === 'Profile') {
-                iconName = 'person';
-              }
-
-              // You can return any component that you like here!
-              return <Icon
-                name={iconName}
-                size={25}
-              />;
-            },
-          }),
+            const text = evt.nativeEvent.text;
         }
-    );
-    ...
+   />
    ```
 
-1. In Android devices you need to [load the NativeBase fonts](https://docs.nativebase.io/docs/GetStarted.html) ([example](https://github.com/GeekyAnts/NativeBase-KitchenSink/blob/CRNA/src/boot/setup.js)) before you can use them. It can be done by using useEffect hook in the _App.js_:
+   * show notification if username is already in use
 
-```jsx harmony
-import React, { useState, useEffect } from 'react';
-import {MediaProvider} from './contexts/MediaContext';
-import Navigator from './navigators/Navigator';
-import * as Expo from "expo";
-import * as Font from 'expo-font';
+### Task 2: Form validation
 
-const App = () => {
-  const [fontReady, setFontReady] = useState(false);
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-    });
-    setFontReady(true);
-  }
-  useEffect(() => {
-   loadFonts();
-  }, []);
+* Study [Validating Forms in React Native](https://medium.com/@pavsidhu/validating-forms-in-react-native-7adc625c49cf) and [Validate.JS](http://validatejs.org/)
+* User inputs should always be checked before making any api calls
+  * username must exist and be long enough (see below)
+  * password must exist and be long enough (see below)
+  * email format must be correct
+  * full name is optional but should be validated if entered(?)
 
-  if (!fontReady) {
-    console.log('Waiting for fonts...');
-    return (
-      <Expo.AppLoading />
-    );
-  }
+1. Add "confirm password" functionality
+    * add another password field
+    * check that user input of both password fields match before making an api call
+    * notify user if the passwords do not match
+1. Add required input validation to each field
+1. Notify the user about problems when needed
+1. You can also combine username availability with the rest of the form validation
 
-  return (
-    <MediaProvider>
-      <Navigator></Navigator>
-    </MediaProvider>
-  );
-};
+_Note:_ new user registrations without valid username (min length 3 characters), password (min length 5) and email (correctly formatted) are not accepted
 
-export default App;
+### Extra
 
-```
-1. Try to make the app look like these images:
-
-![Login screen](https://github.com/mattpe/wbma/blob/master/docs/images/login.png)
-
-![Home screen](https://github.com/mattpe/wbma/blob/master/docs/images/home.png)
-
-![Single screen](https://github.com/mattpe/wbma/blob/master/docs/images/single.png)
-
-
-### Task B: Develop profile page
-
-1. Add avatar image to the user
-    - Use postman to upload image and add a [tag](http://media.mw.metropolia.fi/wbma/docs/#api-Tag-PostTag) 'avatar_CurrentUserId' to it (e.g avatar_85)
-    - When fetching avatars, you can use _CurrentUserId to limit the amount of fetched data.
-1. Display users avatar image, name and email in profile page
-   - You'll need to use existing or add more methods to 'ApiHooks.js' to achieve this
-   - Hint: Userdata is already in AsyncStorage
-
-![Profile screen](https://github.com/mattpe/wbma/blob/master/docs/images/profile.png)
-  
+* Add user update functionality to profile page
+* Check: <https://media.mw.metropolia.fi/wbma/docs/#api-User-PutUser>
