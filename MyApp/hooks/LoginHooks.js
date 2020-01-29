@@ -19,6 +19,10 @@ const constraints = {
       message: "^Not valid email"
     }
   },
+  confirmPassword: {
+    equality: "password"
+  }
+
 };
 
 const useSignUpForm = () => {
@@ -40,15 +44,9 @@ const useSignUpForm = () => {
 
   const validatePassword = (text) => {
     if (text != inputs.password) {
-      setValid(valid => ({
-        ...valid,
-        passwordCheck: "password doesn't match"
-      }));
+      validateInput("confirmPassword", text);
     } else {
-      setValid(valid => ({
-        ...valid,
-        passwordCheck: undefined
-      }));
+      validateInput("confirmPassword", undefined);
     }
   };
 
@@ -58,7 +56,6 @@ const useSignUpForm = () => {
         ...inputs,
         username: text,
       }));
-    validateInput("username", text);
   };
 
   const handlePasswordChange = (text) => {
@@ -67,7 +64,6 @@ const useSignUpForm = () => {
         ...inputs,
         password: text,
       }));
-    validateInput("password", text);
   };
 
   const handleEmailChange = (text) => {
@@ -76,7 +72,6 @@ const useSignUpForm = () => {
         ...inputs,
         email: text,
       }));
-    validateInput("email", text);
   };
 
   const handleNameChange = (text) => {
@@ -93,6 +88,7 @@ const useSignUpForm = () => {
     handleEmailChange,
     handleNameChange,
     validatePassword,
+    validateInput,
     inputs,
     valid,
   };

@@ -5,8 +5,6 @@ import useSignUpForm from "../hooks/LoginHooks";
 import {getProfPic, login, register, checkUserName} from "../hooks/APIHooks";
 import {Text, Button, Form, Body, Item, Container, Right, Label } from "native-base";
 
-const tempUrl = "46ec50a8260645e52bc15462a8a1ed5b.jpg";
-
 const Login = (props) => { // props is needed for navigation
   const {
     inputs,
@@ -16,16 +14,13 @@ const Login = (props) => { // props is needed for navigation
     handleNameChange,
     handleEmailChange,
     validatePassword,
+    validateInput,
   } = useSignUpForm();
 
   const signInAsync = async () => {
       const result = await login(inputs);
       const user = await getProfPic(result.user.user_id);
-      if (user[0].filename === undefined) {
-        result.user.profPic = tempUrl;
-      } else {
-        result.user.profPic = user[0].filename;
-      }
+      result.user.profPic = user[0].filename;
       await AsyncStorage.setItem('userToken', result.token);
       await AsyncStorage.setItem('userInfo', JSON.stringify(result.user));
       props.navigation.navigate('App');
@@ -85,6 +80,7 @@ const Login = (props) => { // props is needed for navigation
             autoCapitalize='none'
             placeholder='username'
             onEndEditing={async (evt) => {
+              validateInput("username", inputs.username);
               const text = evt.nativeEvent.text;
               const result = await checkUserName(text);
               console.log(result);
@@ -108,12 +104,13 @@ const Login = (props) => { // props is needed for navigation
           <Right>
           <FormTextInput
             onChangeText={handlePasswordChange}
+            onEndEditing={validateInput("password", inputs.password)}
             autoCapitalize='none'
             placeholder='password'
             secureTextEntry={true}
           />
           <FormTextInput
-            onChangeText={validatePassword}
+            onEndEditing={validatePassword}
             autoCapitalize='none'
             placeholder='retype password'
             secureTextEntry={true}
@@ -122,8 +119,8 @@ const Login = (props) => { // props is needed for navigation
             {valid.password &&
               <Label style={{color: "red"}}>{valid.password}</Label>
             }
-            {valid.passwordCheck &&
-              <Label style={{color: "red"}}>{valid.passwordCheck}</Label>
+            {valid.confirmPassword &&
+              <Label style={{color: "red"}}>{valid.confirmPassword}</Label>
             }
         </Item>
         <FormTextInput
@@ -135,6 +132,7 @@ const Login = (props) => { // props is needed for navigation
           <Right>
           <FormTextInput
             onChangeText={handleEmailChange}
+            onEndEditing={validateInput("email", inputs.email)}
             autoCapitalize='none'
             placeholder='email'
           />
