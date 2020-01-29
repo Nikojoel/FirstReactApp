@@ -8,7 +8,7 @@ import Profile from "../views/Profile";
 import Single from "../views/Single";
 import Login from "../views/Login";
 import AuthLoading from "../views/AuthLoading";
-import {Icon} from "native-base";
+import { Icon } from "native-base";
 
 const TabNavigator = createBottomTabNavigator(
   {
