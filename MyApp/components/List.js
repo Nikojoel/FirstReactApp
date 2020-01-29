@@ -12,7 +12,6 @@ const List = (props) => {
   useEffect(() => {
     setMedia(data);
   }, [loading]);
-
   return (
     <BaseList
       dataArray={media}
