@@ -1,280 +1,94 @@
-# WBMA, First App
 
-## 1/2020
+
+# AJAX + state
+
+## 1/2019
 
 ---
 
-## Exercise 1: Setup your toolchain and create a new React Native project
+Study [Context](https://reactjs.org/docs/context.html), [State Hook](https://reactjs.org/docs/hooks-state.html), [Effect Hook](https://reactjs.org/docs/hooks-effect.html) and [this article](https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react)
+* We'll use the coding method in the article as an example to do the following tasks 
 
-Study [Getting started and Learn the basics](https://facebook.github.io/react-native/docs/getting-started) from React Native documentation
+## Fetching data with AJAX and sharing it with Context, Task A
 
-**a.**
+1. Continue last exercise. Create a new branch `http-a` with git and checkout it (`git checkout -b http-a`).
+    1. Create 'contexts' folder to project root folder
+    2. Add MediaContext.js file to contexts:
 
-1. If needed, install code editor (+ extensions), git, npm
-1. Use the `[expo](https://docs.expo.io/versions/v36.0.0/get-started/create-a-new-app/)` cli tool to generate an app skeleton
-    * create a folder for your React Native projects
-    * use Git Bash or terminal to go to this folder `cd foldername/otherfoldername/etc...`
-    * `npm install -g expo-cli`
-    * `expo init MyApp`
-        * choose 'blank' template
-        * if this fails on Windows due to missing interactive mode, use cmd instead of Git Bash
-1. Test that app works; run it and open in browser
-    * `cd MyApp`
-    * `npm start`
-1. Create a remote git repository (Github) and push your app there
+        ```js
+        import React, {useState} from 'react';
+        import PropTypes from 'prop-types';
 
-**b.**  
+        const MediaContext = React.createContext([{}, () => {}]);
 
-1. Install ESlint to your project `npm i --save-dev eslint eslint-plugin-react eslint-plugin-react-native babel-eslint`
-1. Initialize ESlint: `./node_modules/.bin/eslint --init` or `node node_modules\eslint\bin\eslint.js --init` (note: needs an interactive shell and does not work in Git Bash on Windows. Use cmd or VSCode's terminal instead.)
-    * Choose:
-        1. To check syntax, find problems, and enforce code style
-        1. JavaScript modules (import/export)
-        1. React
-        1. No TypeScript
-        1. Browser
-        1. Use a popular style guide
-        1. Google
-        1. JavaScript
-        1. Y
-1. Modify .eslintrc.js:
+        const mediaArray = [];
 
-   ```JavaScript
-    module.exports = {
-      'parser': 'babel-eslint',
-      'env': {
-        'browser': true,
-        'es6': true,
-      },
-      'extends': [
-        'google',
-        'eslint:recommended',
-        'plugin:react/recommended',
-      ],
-      'globals': {
-        'Atomics': 'readonly',
-        'SharedArrayBuffer': 'readonly',
-      },
-      'parserOptions': {
-        'ecmaFeatures': {
-          'jsx': true,
-        },
-        'ecmaVersion': 2018,
-        'sourceType': 'module',
-      },
-      'plugins': [
-        'react',
-        'react-native'
-      ],
-      'rules': {
-        'react/jsx-uses-react': 'error',
-            'react/jsx-uses-vars': 'error',
-            'no-console': 0,
-            'require-jsdoc': 0,
-      },
-      'settings': {
-        'react': {
-          'createClass': 'createReactClass', // Regex for Component Factory to use,
-                                             // default to "createReactClass"
-          'pragma': 'React',  // Pragma to use, default to "React"
-          'version': 'detect', // React version. "detect" automatically picks the version you have installed.
-                               // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
-                               // default to latest and warns if missing
-                               // It will default to "detect" in the future
-          'flowVersion': '0.53', // Flow version
-        },
-        'propWrapperFunctions': [
-          // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
-          'forbidExtraProps',
-          {'property': 'freeze', 'object': 'Object'},
-          {'property': 'myFavoriteWrapper'},
-        ],
-        'linkComponents': [
-          // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-          'Hyperlink',
-          {'name': 'Link', 'linkAttribute': 'to'},
-        ],
-      },
-    };
-   ```
-
-1. Create new file '.editorconfig' and add this content:
-
-    ```editorconfig
-    root = true
-
-    [*]
-    indent_style = space
-    indent_size = 2
-    end_of_line = lf
-    charset = utf-8
-    trim_trailing_whitespace = true
-    insert_final_newline = true
-    ```
-
-1. You can format code automatically with _shift-alt-f_
-1. Fix curly-braces error in Preferences/Settings
-    * search for 'braces' and uncheck all 'Insert space after...' checkboxes
-1. Convert the App function to arrow function:
-
-    ```jsx harmony
-   import React from 'react';
-   import {StyleSheet, Text, View} from 'react-native';
-
-   const App = () => {
-     return (
-       <View style={styles.container}>
-         <Text>Open up App.js to start working on your app!</Text>
-       </View>
-     );
-   };
-
-   const styles = StyleSheet.create({
-     container: {
-       flex: 1,
-       backgroundColor: '#fff',
-       alignItems: 'center',
-       justifyContent: 'center',
-     },
-   });
-
-   export default App;
-   ```
-
-**c.**
-
-1. Study [Handling Touches](https://facebook.github.io/react-native/docs/handling-touches) and [Using List Views](https://facebook.github.io/react-native/docs/using-a-listview)
-1. Develop your app further. Add this after the import statements:
-
-    ```ecmascript 6
-    const mediaArray = [
-      {
-        'key': '0',
-        'title': 'Title 1',
-        'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sodales enim eget leo condimentum vulputate. Sed lacinia consectetur fermentum. Vestibulum lobortis purus id nisi mattis posuere. Praesent sagittis justo quis nibh ullamcorper, eget elementum lorem consectetur. Pellentesque eu consequat justo, eu sodales eros.',
-        'thumbnails': {
-          w160: 'http://placekitten.com/160/161',
-        },
-        'filename': 'http://placekitten.com/2048/1920',
-      },
-      {
-        'key': '1',
-        'title': 'Title 2',
-        'description': 'Donec dignissim tincidunt nisl, non scelerisque massa pharetra ut. Sed vel velit ante. Aenean quis viverra magna. Praesent eget cursus urna. Ut rhoncus interdum dolor non tincidunt. Sed vehicula consequat facilisis. Pellentesque pulvinar sem nisl, ac vestibulum erat rhoncus id. Vestibulum tincidunt sapien eu ipsum tincidunt pulvinar. ',
-        'thumbnails': {
-          w160: 'http://placekitten.com/160/162',
-        },
-        'filename': 'http://placekitten.com/2041/1922',
-      },
-      {
-        'key': '2',
-        'title': 'Title 3',
-        'description': 'Phasellus imperdiet nunc tincidunt molestie vestibulum. Donec dictum suscipit nibh. Sed vel velit ante. Aenean quis viverra magna. Praesent eget cursus urna. Ut rhoncus interdum dolor non tincidunt. Sed vehicula consequat facilisis. Pellentesque pulvinar sem nisl, ac vestibulum erat rhoncus id. ',
-        'thumbnails': {
-          w160: 'http://placekitten.com/160/163',
-        },
-        'filename': 'http://placekitten.com/2039/1920',
-      },
-    ];
-    ```
-
-1. Add `<Flatlist>`, `<TouchableOpacity>`, `<Text>` and `<Image>` components to the existing `<View>`. Example:
-
-    ```jsx harmony
-    <FlatList
-        data={mediaArray}
-        renderItem={({item}) => {
+        const MediaProvider = (props) => {
+          const [media, setMedia] = useState(mediaArray);
           return (
-            <TouchableOpacity>
-              <Image
-                style={{width: 100, height: 100}}
-                source={{uri: item.thumbnails.w160}}
-              />
-              <View>
-                <Text>{item.title}</Text>
-                <Text>{item.description}</Text>
-              </View>
-            </TouchableOpacity>
+            <MediaContext.Provider value={[media, setMedia]}>
+              {props.children}
+            </MediaContext.Provider>
           );
-        }}
-      />
-    ```
+        };
 
-**d.**
+        MediaProvider.propTypes = {
+          children: PropTypes.node,
+        };
 
-1. Study [Layout with Flexbox](https://facebook.github.io/react-native/docs/flexbox)
-1. Develop your app further. Modify the app so that the layout is similar to this: 
-    ![View 1](images/app01.png)
-1. You can modify the styles either inline or by adding properties to the 'styles' object at the end of the file.
+        export {MediaContext, MediaProvider};
+        ```
 
-**e.**
+    3. Move mediaArray from App.js to MediaContext's state
+    4. Add _MediaProvider_ to App.js JSX
+    5. Modify List.js to use the data from MediaContext instead of prop
 
-1. Study [Props](https://facebook.github.io/react-native/docs/props) and [PropTypes](https://reactjs.org/docs/typechecking-with-proptypes.html)
-1. Split the app to multiple files. In other words: create components.
-    * Create a folder 'components' and there a new files 'List.js' and 'ListItem.js'
-    * Component hierarchy:
-
-    ```text
-    App
-       -View
-           -List
-               -ListItem
-               ...
-
-    ```
-
-    * Move `<Flatlist>` to 'List.js' and the content of `<Flatlist>` to 'ListItem.js'
-    * Add imports, component function and style object. (Basically the same as 'App.js'. Just change the name of the component function.)
-    * PropTypes for List:
-
-    ```jsx harmony
-   List.propTypes = {
-     mediaArray: PropTypes.array,
-   };
-   ```
-
-    * PropTypes for ListItem:
-
-   ```jsx harmony
-    ListItem.propTypes = {
-      singleMedia: PropTypes.object,
-    };
-    ```
-
-    * In 'App.js' pass 'data' array as prop called 'mediaArray' from App to List:
-
-    ```jsx harmony
-    const App = () => {
-      return (
-        <View>
-          <List mediaArray={mediaArray} />
-        </View>
-      );
-    };
-    ```
-
-   * In 'List.js' pass 'item' object as prop called 'singleMedia' from List to ListItem:
-
-   ```jsx harmony
-    const List = (props) => {
-      console.log(props);
-      return (
+        ```js
+        ...
+        const [media, setMedia] = useContext(MediaContext);
+        ...
+        ...
         <FlatList
-          data={props.mediaArray}
-          renderItem={({item}) => <ListItem singleMedia={item} />}
-        />
-      );
-    };
-    ```
+          data={media}
+        ...
+        ```
 
-1. Create a new branch, add, commit & push your project to remote repository
-    * `git checkout -b someBranchName`
-    * `git add .`
-    * `git commit -m "describe changes somehow"`
-    * `git push`
+    6. Test that the app still works.
+1. Use [test.json](./assets/test.json) url = https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json instead of the hard coded mediaArray
+   * use [fetch](https://javascript.info/async-await#await) or axios to load test.json,
+     * fetch is used in the course material
+     * prevent fetch from looping by using effect-hook.
+     * Use 'hooks.js' from [this article](https://medium.com/@cwlsn/how-to-fetch-data-with-react-hooks-in-a-minute-e0f9a15a44d6) as an example
+        * create 'hooks' folder to project root and save 'hooks.js' as 'APIHooks.js' there
+        * convert functions to arrow functions.
+        * In _List.js_ First log the loaded data using `console.log()`
+           * [Debugging JavaScript](https://docs.expo.io/versions/v34.0.0/workflow/debugging/#debugging-javascript)
+           * Use _Photos.js_ in the article as example.
+        * Save the data to MediaContext's state using `setMedia`. 
+        * Use [keyExtractor](https://www.techiediaries.com/react-native-tutorial/flatlist-with-renderitem-and-keyextractor/) in _List.js_ to fix the warning about missing keys
+1. git add, commit & push to remote repository
 
 ---
 
-### Bonus (Optional)
+## Fetching data with AJAX, Task B
 
-Develop your app further. Open 'filename' image in a [Modal](https://facebook.github.io/react-native/docs/modal.html) when `<TouchableOpacity>` is tapped.
+1. Continue last exercise. Create a new git branch `http-b` and use it.
+1. Modify the app so that you fetch the data from the media API instead of test.json
+    - [Documentation](http://media.mw.metropolia.fi/wbma/docs/)
+    - base url: http://media.mw.metropolia.fi/wbma/
+    - Media files location: http://media.mw.metropolia.fi/wbma/uploads/
+1. In _APIHooks.js_ 
+   * add this after imports: `const apiUrl = 'http://media.mw.metropolia.fi/wbma/';`
+   * rename useFetch function to 'getAllMedia' and remove url parameter from parens.
+   * change `const response = await fetch(url);` to `const response = await fetch(apiUrl + 'media');`
+1. First log the loaded data using ```console.log()```
+   * Note that '/media' endpoint doesn't give you thumbnails. You need to do a nested request to '/media/:id' to get also the thumbnails.
+   * To combine multiple fetch results use [Promise.all](https://www.freecodecamp.org/news/promise-all-in-javascript-with-example-6c8c5aea3e32/):
+   ```javascript
+   const result = await Promise.all(array.map(async (item) => {
+      const response = await fetch(url);
+      return await response.json();
+    }));
+   ```
+1. In _List.js_ use _getAllMedia_ instead of useFetch
+1. git add, commit & push to remote repository
