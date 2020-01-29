@@ -103,7 +103,6 @@ const Login = (props) => { // props is needed for navigation
             {valid.username &&
             <Label style={{color: "red"}}>{valid.username}</Label>
             }
-
         </Item>
         <Item style={{borderColor: "transparent"}}>
           <Right>
