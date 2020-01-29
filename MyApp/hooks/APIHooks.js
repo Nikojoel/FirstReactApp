@@ -62,4 +62,9 @@ const getProfPic = async (user) => {
   return response.json();
 };
 
-export { getAllMedia, login, register, getProfPic };
+const checkUserName = async (userName) => {
+  const response = await fetch (apiUrl + "users/username/" + userName);
+  return response.json();
+};
+
+export { getAllMedia, login, register, getProfPic, checkUserName };
