@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {AsyncStorage} from 'react-native';
 import FormTextInput from "../components/FormTextInput";
 import useSignUpForm from "../hooks/LoginHooks";
@@ -34,7 +34,7 @@ const Login = (props) => { // props is needed for navigation
 
   const [isRegistered, setRegister] = useState(true);
   const [isTaken, setTaken] = useState(false);
-  console.log(valid);
+  
     return (
     <Container>
       {isRegistered ? (
