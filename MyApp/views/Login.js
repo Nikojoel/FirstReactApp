@@ -32,9 +32,9 @@ const Login = (props) => { // props is needed for navigation
       await signInAsync();
   };
 
-  const [isRegistered, setRegister] = useState(true);
   const [isTaken, setTaken] = useState(false);
-  
+  const [isRegistered, setRegister] = useState(true);
+
     return (
     <Container>
       {isRegistered ? (
@@ -156,7 +156,5 @@ const Login = (props) => { // props is needed for navigation
     </Container>
   );
 };
-
-// proptypes here
 
 export default Login;
