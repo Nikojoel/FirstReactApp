@@ -43,7 +43,7 @@ const useSignUpForm = () => {
   };
 
   const validatePassword = (text) => {
-    if (text != inputs.password) {
+    if (text.nativeEvent.text !== inputs.password) {
       validateInput("confirmPassword", text);
     } else {
       validateInput("confirmPassword", undefined);
