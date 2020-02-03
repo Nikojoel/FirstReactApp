@@ -60,7 +60,7 @@ const Login = (props) => { // props is needed for navigation
               <Text style={{color: "white"}}>Login</Text>
             </Body>
           </Button>
-          <Button dark onPress={() => {setRegister(false)}}>
+          <Button dark onPress={() => setRegister(false)}>
             <Body>
               <Text style={{color: "white"}}>Not registered?</Text>
             </Body>
@@ -80,16 +80,16 @@ const Login = (props) => { // props is needed for navigation
                 autoCapitalize='none'
                 placeholder='username'
                 onEndEditing={async (evt) => {
-                  validateInput("username", inputs.username);
-                  const text = evt.nativeEvent.text;
-                  const result = await checkUserName(text);
-                  console.log(result);
-                  if (result.available === true) {
-                    setTaken(false);
-                  } else {
-                    setTaken(true);
+                    validateInput("username", inputs.username);
+                    const text = evt.nativeEvent.text;
+                    const result = await checkUserName(text);
+                    console.log(result);
+                    if (result.available === true) {
+                      setTaken(false);
+                    } else {
+                      setTaken(true);
+                    }
                   }
-                }
                 }
               />
             </Right>
@@ -97,14 +97,14 @@ const Login = (props) => { // props is needed for navigation
             <Label style={{color: "red"}}>Username taken</Label>
             }
             {valid.username &&
-            <Label style={{color: "red"}}>{valid.username}</Label>
+            <Label style={{color: "red"}}>Not a valid username</Label>
             }
           </Item>
           <Item style={{borderColor: "transparent"}}>
             <Right>
               <FormTextInput
                 onChangeText={handlePasswordChange}
-                onEndEditing={validateInput("password", inputs.password)}
+                onEndEditing={() => validateInput("password", inputs.password)}
                 autoCapitalize='none'
                 placeholder='password'
                 secureTextEntry={true}
@@ -117,10 +117,10 @@ const Login = (props) => { // props is needed for navigation
               />
             </Right>
             {valid.password &&
-            <Label style={{color: "red"}}>{valid.password}</Label>
+            <Label style={{color: "red"}}>Not a valid password</Label>
             }
             {valid.confirmPassword &&
-            <Label style={{color: "red"}}>{valid.confirmPassword}</Label>
+            <Label style={{color: "red"}}>Passwords doesn't match</Label>
             }
           </Item>
           <FormTextInput
@@ -132,13 +132,13 @@ const Login = (props) => { // props is needed for navigation
             <Right>
               <FormTextInput
                 onChangeText={handleEmailChange}
-                onEndEditing={validateInput("email", inputs.email)}
+                onEndEditing={() => validateInput("email", inputs.email)}
                 autoCapitalize='none'
                 placeholder='email'
               />
             </Right>
             {valid.email &&
-            <Label style={{color: "red"}}>{valid.email}</Label>
+            <Label style={{color: "red"}}>Not a valid email</Label>
             }
           </Item>
           <Button primary onPress={registerInAsync}>
@@ -146,7 +146,7 @@ const Login = (props) => { // props is needed for navigation
               <Text style={{color: "white"}}>Register</Text>
             </Body>
           </Button>
-          <Button dark onPress={() => {setRegister(true)}}>
+          <Button dark onPress={() => setRegister(true)}>
             <Body>
               <Text style={{color: "white"}}>Already registered?</Text>
             </Body>
