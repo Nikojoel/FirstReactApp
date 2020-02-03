@@ -20,6 +20,7 @@ const Profile = (props) => {
     await AsyncStorage.clear();
     props.navigation.navigate('Auth');
   };
+
   const user = getUser();
   console.log(user);
   return (
