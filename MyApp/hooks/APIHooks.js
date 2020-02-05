@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import {AsyncStorage} from "react-native";
 
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
 const url = 'http://media.mw.metropolia.fi/wbma/media/';
@@ -67,4 +68,18 @@ const checkUserName = async (userName) => {
   return response.json();
 };
 
-export { getAllMedia, login, register, getProfPic, checkUserName };
+const uploadImage = async (data) => {
+  const token = await AsyncStorage.getItem('userToken');
+  const response = await fetch ('http://media.mw.metropolia.fi/wbma/media', {
+    method: "POST",
+    body: data,
+    headers: {
+      "content-type": "multipart/form-data",
+      "x-access-token": token,
+    },
+  });
+  return response.json();
+};
+
+
+export { getAllMedia, login, register, getProfPic, checkUserName, uploadImage};

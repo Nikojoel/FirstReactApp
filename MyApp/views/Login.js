@@ -19,7 +19,9 @@ const Login = (props) => { // props is needed for navigation
 
   const signInAsync = async () => {
     const result = await login(inputs);
-    const user = await getProfPic(result.user.user_id);
+    const user = await getProfPic(52);
+    // HARDCODED AVATAR
+    //const user = await getProfPic(result.user.user_id);
     result.user.profPic = user[0].filename;
     await AsyncStorage.setItem('userToken', result.token);
     await AsyncStorage.setItem('userInfo', JSON.stringify(result.user));
