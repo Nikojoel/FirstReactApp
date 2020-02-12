@@ -53,9 +53,14 @@ const useUploadForm = () => {
   const handleUpload = async (file) => {
     const filename = file.split('/').pop();
     const match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    if (type === 'image/jpg') {
-      type = 'image/jpeg'
+    let type = "";
+    if (file.type !== "video") {
+      type = match ? `image/${match[1]}` : `image`;
+      if (type === 'image/jpg') {
+        type = 'image/jpeg'
+      } else {
+        type = match ? `video/${match[1]}` : `video`;
+      }
     }
     const formData = new FormData();
     formData.append("file", {uri: file, name: filename, type});

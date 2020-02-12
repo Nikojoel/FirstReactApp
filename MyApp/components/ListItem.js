@@ -18,9 +18,11 @@ const ListItem = (props) => {
       <Right>
         <Button primary rounded onPress={() => {
           props.navigation.push("Single", {
-            fileName: props.singleMedia.thumbnails.w160,
+            fileName: props.singleMedia.filename,
             title: props.singleMedia.title,
             text: props.singleMedia.description,
+            fileType: props.singleMedia.media_type,
+            userId: props.singleMedia.user_id,
           });
         }}>
           <Text>View</Text>

@@ -1,20 +1,59 @@
-import React from 'react';
-import {StyleSheet, Image, Dimensions,} from 'react-native';
-import {Item, Text, Body} from "native-base";
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, Image, Dimensions, } from 'react-native';
+import { Text, Body, Card, CardItem, Container, Content, } from "native-base";
+import { Video } from "expo-av";
+import { Icon } from "native-base";
+import { getUser } from "../hooks/APIHooks";
+
 
 const Single = (props) => {
-  const { navigation } = props;
+  const {navigation} = props;
+  const type = navigation.state.params.fileType;
+
+  const [user, setUser] = useState({});
+  const getUserName = async () => {
+    const user = await getUser(navigation.state.params.userId);
+    setUser(user);
+  };
+  useEffect(() => {
+    getUserName();
+  }, []);
 
   return (
-    <Item style={{borderColor: "transparent"}}>
-      <Body>
-      <Image style={styles.image}
-        source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName", "no picture")}}
-      />
-        <Text style={styles.desc}>{navigation.getParam("title", "no title")}</Text>
-        <Text style={styles.text}>{navigation.getParam("text", "no text")}</Text>
-      </Body>
-    </Item>
+    <Container>
+      <Content>
+        <Card>
+          <CardItem bordered>
+            <Icon name="person"/>
+            <Text>by {user.username}</Text>
+          </CardItem>
+          <Body>
+            <Text style={styles.desc}>{navigation.getParam("title")}</Text>
+            <CardItem>
+              {type === "image" &&
+              <Image
+                style={styles.image}
+                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName")}}
+              />
+              }
+              {type === "video" &&
+              <Video
+                style={styles.image}
+                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName")}}
+                shouldPlay={true}
+                isLooping={true}
+                resizeMode={"cover"}
+              />
+              }
+            </CardItem>
+          </Body>
+          <CardItem bordered>
+            <Icon name="image"/>
+            <Text style={styles.text}>{navigation.getParam("text")}</Text>
+          </CardItem>
+        </Card>
+      </Content>
+    </Container>
   );
 };
 
@@ -22,16 +61,10 @@ const styles = StyleSheet.create({
   image: {
     width: Dimensions.get("window").width * 0.85,
     height: Dimensions.get("window").width * 0.85,
-    marginTop: 30,
   },
   desc: {
     fontSize: 25,
-    margin: 5,
   },
-  text: {
-    marginLeft: 15,
-    marginRight: 15,
-  }
 });
 
 export default Single;

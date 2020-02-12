@@ -1,6 +1,5 @@
 import React, {useState, } from 'react';
 import {Text, Button, Form, Body, Item, Container, Label, Right, } from "native-base";
-import Toast from "react-native-simple-toast";
 import {Image, Dimensions, StyleSheet} from 'react-native';
 import FormTextInput from "../components/FormTextInput";
 import useUploadForm from "../hooks/UploadHooks";

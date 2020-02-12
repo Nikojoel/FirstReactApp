@@ -81,5 +81,15 @@ const uploadImage = async (data) => {
   return response.json();
 };
 
+const getUser = async (userId) => {
+  const token = await AsyncStorage.getItem('userToken');
+  const response = await fetch (apiUrl + "users/" + userId, {
+    headers: {
+      "x-access-token": token,
+    }
+  });
+  return response.json();
+};
 
-export { getAllMedia, login, register, getProfPic, checkUserName, uploadImage};
+
+export { getAllMedia, login, register, getProfPic, checkUserName, uploadImage, getUser};
