@@ -1,38 +1,69 @@
-# WBMA, Forms + Upload
-
-## 4/2019
+## Week 5/2020
 
 ---
 
-## Forms
+## Media Player
 
-### Task A: Create Upload Form
+### Task: Modify page for viewing single media files
+#### Unless you are using Metropolia's wifi - due to irregularites in Metropolia's firewall - you'll need to enable VPN on your mobile device to make videos show on your device. [Instructions](https://wiki.metropolia.fi/pages/viewpage.action?pageId=149652071#VPN-et%C3%A4yhteydet-VPN-apuohjelmanasennusjak%C3%A4ytt%C3%B6mobiililaitteissa)
 
 1. Continue the previous exercise. Create a new git branch for these tasks.
-1. Study [Expo SDK](https://docs.expo.io/versions/v34.0.0/sdk/overview/)
-1. Install required Expo SDK components:
-   - `expo install expo-image-picker`
-   - `expo install expo-permissions`
-   - `expo install expo-constants`
-1. Create a new file 'views/Upload.js' for the upload functionality
-1. Add a button to bottom tabs to navigate to Upload component
-1. add `<Image>` and input fields for 'title' and 'description' like in Login.js. Also add two buttons for selecting and uploading a file.
-1. Create 'hooks/UploadHooks.js' and make hooks for title and description like in LoginHooks.js
-1. Study [ImagePicker](https://docs.expo.io/versions/v34.0.0/sdk/imagepicker/) and use the example to select Image from ImagePicker and display it in `<Image>` when the first button is pressed.
-1. When uploading a file to the API, you need to send [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects)
-    - in UploadHooks.js create functon 'handleUpload' which is called by onPress event of the second button. The function should receive the selected image as a parameter.
-       - you can use [this article](https://stackoverflow.com/questions/42521679/how-can-i-upload-a-photo-with-expo) as a reference. See the part after this comment "// ImagePicker saves the taken photo to disk and returns a local URI to it". NOTE: the example generates an invalid mime-type for `.jpg` files. This can be fixed e.g. ("quick'n'dirty" style) by adding a row `if (type === 'image/jpg') type = 'image/jpeg';` after the `let type = ...` statement
-    - After image is uploaded (promise returned by async upload function is completed) redirect to Home
-        - refresh image table to update the list. It might be neccessary to empty the 'media' array of the context before loading the updated content to it or the list might not render properly.
-        - wait 2 seconds before going to Home so that thumbnail (generated on the server) is ready
-1. Upload button should be activated only when the form is correctly filled and media file is selected
-    - Title is required and minimun length is ?
-    - Description is optional but minimun length is ?
-1. Add reset button for clearing the whole form and image preview
+1. Modify 'Single.js'. Features:
+    - depending on file type use `<Image>` or `<Video>` to show/play media file
+        - https://docs.expo.io/versions/latest/sdk/video/
+        - Audio is optional: https://docs.expo.io/versions/latest/sdk/audio/
+    - show also other data related to the media file:
+        - title
+        - description
+        - user (to get username you need to request [User endpoint](http://media.mw.metropolia.fi/wbma/docs/#api-User-GetUser) using media file's `user_id`)
+        - optional: likes (request [Favourite endpoint](http://media.mw.metropolia.fi/wbma/docs/#api-Favourite) on the media api)
+            - add likes to image(s) with Postman or add 'like' button to Single.js
+        - optional: show users who like the image
 
-### Extra: Use OpenGL to add filters to image
+## Show user's files + update
 
-1. Study [gl-react-expo](https://www.npmjs.com/package/gl-react-expo)
-1. Do a new app where user can select existing picture or take a new picture with phone's camera and then edit brightness, contrast and saturation (of course tou can add the functionalities to the existing app instead)
-   - [Example](https://github.com/gre/gl-react/tree/master/examples/expo-gl-react-camera-effects)
-1. [More examples](https://gl-react-cookbook.surge.sh/)
+1. Add new view 'MyFiles.js'
+1. Add a button (for example to profile page) which opens MyFiles
+1. Display a list of user's own files
+    - very similar to Home (and List)
+1. Add 'view', 'modify' and 'delete' buttons next to each file.
+    - onPress example for delete:
+    ```jsx harmony
+     <Button onPress={() => {
+       deleteFile(file.file_id);
+     }}><Text>Delete</Text></Button>
+    ```
+    - important! not like this, because it's invoked immediately without click:
+    ```jsx harmony
+    <Button onPress={ deleteFile(file.file_id) }>...
+    ```
+1. Add corresponding functionality to the buttons
+    - for 'view' use Single.js
+    - delete does not need it's own page
+    - modify is 90% same as Upload
+        - make a copy of Upload.js and remove ImagePicker
+
+### Tips for project
+- Add a tag with your app name automatically to all uploaded files. This way they don't get mixed with files uploaded by other apps.
+- If you want to save additional data with files, you can add it to the 'description' like this:
+    ```javascript
+
+      ...
+      const moreData = {
+        description: 'This is the actual description',
+        someData: 'Some other data I want to save',
+        someMoreData: {width: 300, height: 450 }
+      }
+      ...
+          // FormData
+         formData.append('description', JSON.stringify(moreData));
+      ...
+
+    ```
+    You can extract data later like this:
+    ```javascript
+    const allData = JSON.parse(descriptionFromAPI);
+    const description = allData.description;
+    const someData = allData.someData;
+    const someMoreData = allData.someMoreData;
+    ```
