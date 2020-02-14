@@ -19,6 +19,7 @@ const List = (props) => {
         (item) => <ListItem
           navigation={props.navigation}
           singleMedia={item}
+          user={undefined}
         />
       }
       keyExtractor={(item, index) => index.toString()}

@@ -1,7 +1,8 @@
 import {Image, StyleSheet, Dimensions} from "react-native";
-import {Button, ListItem as Item, Left, Body, Right, Text} from "native-base";
+import {Button, ListItem as Item, Left, Body, Content, Text,} from "native-base";
 import React from "react";
 import PropTypes from "prop-types";
+import {deleteFile} from "../hooks/APIHooks";
 
 const ListItem = (props) => {
   return (
@@ -15,7 +16,6 @@ const ListItem = (props) => {
           <Text numberOfLines={1}>{props.singleMedia.description}</Text>
         </Body>
       </Left>
-      <Right>
         <Button primary rounded onPress={() => {
           props.navigation.push("Single", {
             fileName: props.singleMedia.filename,
@@ -27,7 +27,25 @@ const ListItem = (props) => {
         }}>
           <Text>View</Text>
         </Button>
-      </Right>
+      {props.navigation.state.routeName === "MyFiles" &&
+        <Content>
+          <Body>
+        <Button warning rounded onPress={() => {
+          props.navigation.push("Update", {
+            fileName: props.singleMedia.filename,
+            file_id: props.singleMedia.file_id,
+          })
+        }}>
+          <Text>Edit</Text>
+        </Button>
+        <Button danger rounded onPress={async () => {
+          await deleteFile(props.singleMedia.file_id);
+        }}>
+          <Text>Drop</Text>
+        </Button>
+          </Body>
+        </Content>
+      }
     </Item>
   );
 };

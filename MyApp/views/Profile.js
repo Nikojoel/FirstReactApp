@@ -1,6 +1,6 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {AsyncStorage, Image, Dimensions, StyleSheet} from 'react-native';
-import { Container, Text, Button, CardItem, Body, Card, Content} from "native-base";
+import {Container, Text, Button, CardItem, Body, Card, Content} from "native-base";
 import {Icon} from "native-base";
 
 const getUser = () => {
@@ -44,8 +44,17 @@ const Profile = (props) => {
             <CardItem bordered>
               <Text>Email: {user.email}</Text>
             </CardItem>
+          <CardItem>
+            <Button style={{flex: 1,}} primary onPress={() => {
+              props.navigation.navigate("MyFiles", {user: user});
+            }}>
+              <Body>
+                <Text style={{color: "white"}}>My posts</Text>
+              </Body>
+            </Button>
+          </CardItem>
             <CardItem>
-              <Button style={{flex: 1,}} primary onPress={signOutAsync}>
+              <Button style={{flex: 1,}} dark onPress={signOutAsync}>
                 <Body>
                   <Text style={{color: "white"}}>Logout</Text>
                 </Body>

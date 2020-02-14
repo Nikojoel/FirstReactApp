@@ -1,51 +1,30 @@
-import React, {useState, } from 'react';
+import React, {useState, useEffect } from 'react';
 import {Text, Button, Form, Body, Item, Container, Label, Right, } from "native-base";
 import {Image, Dimensions, StyleSheet} from 'react-native';
 import FormTextInput from "../components/FormTextInput";
 import useUploadForm from "../hooks/UploadHooks";
-import * as ImagePicker from "expo-image-picker";
+import {updatePost} from "../hooks/APIHooks";
 
-
-const Upload = (props) => {
+const Update = (props) => {
   const {
     inputs,
     valid,
     handleTextChange,
     handleTitleChange,
     validateInput,
-    handleUpload,
-    resetText,
   } = useUploadForm();
 
-
   const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    console.log("result", result);
-    if (!result.cancelled) {
-      setImage(result.uri);
-      console.log("image state:", image);
-    }
-  };
-  console.log("Upload.js=",image);
-  const clearForms = () => {
-    setImage(null);
-    resetText("title", "");
-    resetText("postText", "");
-  };
+  useEffect(() => {
+    setImage("http://media.mw.metropolia.fi/wbma/uploads/" + props.navigation.state.params.fileName);
+  },[]);
 
   return (
     <Container>
       <Form>
         <Item style={{borderColor: "transparent"}}>
           <Body>
-            <Text style={{fontWeight: "bold", fontSize: 30,}}>Upload</Text>
+            <Text style={{fontWeight: "bold", fontSize: 30,}}>Update</Text>
           </Body>
         </Item>
         <Item style={{borderColor: "transparent"}}>
@@ -70,24 +49,16 @@ const Upload = (props) => {
             />
           </Right>
         </Item>
-        <Button primary dark onPress={pickImage}>
-          <Body>
-            <Text style={{color: "white"}}>Select</Text>
-          </Body>
-        </Button>
-        {!valid.title && image &&
+        {!valid.title &&
         <Form>
-          <Button primary onPress={async () => {
-            await handleUpload(image);
-            props.navigation.replace("Home");
+          <Button warning onPress={async () => {
+            await updatePost({
+              title: inputs.title,
+              text: inputs.postText,
+              fileId: props.navigation.state.params.file_id});
           }}>
             <Body>
-              <Text style={{color: "white"}}>Upload</Text>
-            </Body>
-          </Button>
-          <Button danger onPress={clearForms}>
-            <Body>
-              <Text style={{color: "white"}}>Delete</Text>
+              <Text style={{color: "white"}}>Update</Text>
             </Body>
           </Button>
         </Form>
@@ -112,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Upload;
+export default Update;

@@ -28,28 +28,31 @@ const Single = (props) => {
             <Text>by {user.username}</Text>
           </CardItem>
           <Body>
-            <Text style={styles.desc}>{navigation.getParam("title")}</Text>
+            <Text style={styles.desc}>{navigation.state.params.title}</Text>
             <CardItem>
               {type === "image" &&
               <Image
                 style={styles.image}
-                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName")}}
+                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.state.params.fileName}}
               />
               }
               {type === "video" &&
               <Video
-                style={styles.image}
-                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.getParam("fileName")}}
-                shouldPlay={true}
-                isLooping={true}
-                resizeMode={"cover"}
+                source={{uri: "http://media.mw.metropolia.fi/wbma/uploads/" + navigation.state.params.fileName}}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                style={{ width: 300, height: 300 }}
               />
               }
             </CardItem>
           </Body>
           <CardItem bordered>
             <Icon name="image"/>
-            <Text style={styles.text}>{navigation.getParam("text")}</Text>
+            <Text style={styles.text}>{navigation.state.params.text}</Text>
           </CardItem>
         </Card>
       </Content>
