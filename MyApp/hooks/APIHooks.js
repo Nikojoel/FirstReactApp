@@ -165,18 +165,22 @@ const deleteFile = async (fileId) => {
 };
 
 const updatePost = async (data) => {
+  let formBody = [];
+  for (let property in data.data) {
+    let encodedKey = encodeURIComponent(property);
+    let encodedValue = encodeURIComponent(data.data[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
   try {
     const token = await AsyncStorage.getItem('userToken');
     const response = await fetch(url + data.fileId, {
       method: "PUT",
-      body: JSON.stringify({
-        title: data.title,
-        description: data.text,
-      }),
       headers: {
         "x-access-token": token,
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded"
       },
+      body: formBody,
     });
     return response.json();
   } catch (e) {

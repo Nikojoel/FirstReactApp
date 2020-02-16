@@ -5,7 +5,6 @@ import {getAllUserMedia} from '../hooks/APIHooks';
 import PropTypes from 'prop-types';
 
 const MyFiles = (props) => {
-  console.log(props.navigation.state.params);
   const user = props.navigation.state.params.user_id;
   const [media, setMedia] = useState({});
   const [data, loading] = getAllUserMedia();

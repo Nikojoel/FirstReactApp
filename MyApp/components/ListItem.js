@@ -34,6 +34,7 @@ const ListItem = (props) => {
           props.navigation.push("Update", {
             fileName: props.singleMedia.filename,
             file_id: props.singleMedia.file_id,
+            user_id: props.singleMedia.user_id,
           })
         }}>
           <Text>Edit</Text>

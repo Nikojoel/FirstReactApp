@@ -52,10 +52,14 @@ const Update = (props) => {
         {!valid.title &&
         <Form>
           <Button warning onPress={async () => {
+            console.log(props.navigation.state.params);
             await updatePost({
-              title: inputs.title,
-              text: inputs.postText,
+              data: {
+                title: inputs.title,
+                description: inputs.postText,
+              },
               fileId: props.navigation.state.params.file_id});
+            props.navigation.navigate("MyFiles", props.navigation.state.params.user_id);
           }}>
             <Body>
               <Text style={{color: "white"}}>Update</Text>

@@ -22,7 +22,6 @@ const Profile = (props) => {
   };
 
   const user = getUser();
-  console.log(user);
   return (
     <Container>
       <Content>
